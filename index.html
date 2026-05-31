@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>北玄宗师</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 200vh;
+            font-family: 'Microsoft YaHei', sans-serif;
+            overflow-x: hidden;
+            background: #0a0a1a;
+        }
+
+        /* 第一屏 */
+        .first-screen {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* 第二屏（底部区域） */
+        .bottom-area {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* 高斯模糊背景 */
+        .bg-blur {
+            position: fixed;
+            top: -20px;
+            left: -20px;
+            right: -20px;
+            bottom: -20px;
+            background: 
+                radial-gradient(circle at 30% 70%, rgba(102, 126, 234, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 70% 30%, rgba(118, 75, 162, 0.4) 0%, transparent 50%),
+                linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            filter: blur(20px);
+            z-index: -1;
+        }
+
+        /* 主容器 */
+        .container {
+            text-align: center;
+            z-index: 1;
+        }
+
+        /* 主标题 */
+        .main-title {
+            font-size: 5rem;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 
+                0 0 20px rgba(255, 255, 255, 0.5),
+                0 0 40px rgba(102, 126, 234, 0.5),
+                0 0 60px rgba(118, 75, 162, 0.5);
+            letter-spacing: 15px;
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 
+                    0 0 20px rgba(255, 255, 255, 0.5),
+                    0 0 40px rgba(102, 126, 234, 0.5),
+                    0 0 60px rgba(118, 75, 162, 0.5);
+            }
+            to {
+                text-shadow: 
+                    0 0 30px rgba(255, 255, 255, 0.8),
+                    0 0 60px rgba(102, 126, 234, 0.8),
+                    0 0 80px rgba(118, 75, 162, 0.8);
+            }
+        }
+
+        /* 卡片容器 */
+        .cards {
+            display: flex;
+            gap: 25px;
+            margin-top: 60px;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+
+        /* 圆润卡片 - 液态玻璃效果 */
+        .card {
+            width: 200px;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.2),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0.1) 0%,
+                rgba(255, 255, 255, 0.05) 50%,
+                transparent 100%
+            );
+            border-radius: 25px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(
+                circle,
+                rgba(255, 255, 255, 0.1) 0%,
+                transparent 70%
+            );
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            transform: scale(0);
+        }
+
+        .card:hover {
+            transform: scale(1.18);
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.3),
+                0 0 40px rgba(102, 126, 234, 0.3),
+                inset 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card:hover::after {
+            opacity: 0.5;
+            transform: scale(1);
+            animation: liquid 2s infinite linear;
+        }
+
+        @keyframes liquid {
+            0% { transform: translateX(-30%) translateY(-30%) rotate(0deg); }
+            100% { transform: translateX(-30%) translateY(-30%) rotate(360deg); }
+        }
+
+        .card span {
+            color: #fff;
+            font-size: 1.3rem;
+            font-weight: 500;
+            letter-spacing: 2px;
+            z-index: 1;
+        }
+
+        /* 关于我卡片 - 并排三个字 */
+        .card.expanded {
+            width: 320px;
+            height: 140px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .contact-info {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s ease 0.1s;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+
+        .card.expanded .contact-info {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 特大再见卡片 */
+        .goodbye-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+
+        .goodbye-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .goodbye-card {
+            font-size: 15vw;
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.95);
+            text-shadow: 
+                0 0 40px rgba(255, 255, 255, 0.5),
+                0 0 80px rgba(102, 126, 234, 0.7),
+                0 0 120px rgba(118, 75, 162, 0.7);
+            transform: scale(0.5) rotate(-180deg);
+            transition: all 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            letter-spacing: 20px;
+            text-align: center;
+        }
+
+        .goodbye-overlay.active .goodbye-card {
+            transform: scale(1) rotate(0deg);
+        }
+
+        .goodbye-overlay.hiding .goodbye-card {
+            transform: scale(0.5) rotate(180deg);
+            opacity: 0;
+        }
+
+        /* 装饰粒子 */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: float 15s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% {
+                transform: translateY(-100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* 滚动提示 */
+        .scroll-hint {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+            animation: bounce 2s infinite;
+            z-index: 10;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
+        }
+
+        /* 底部提示 */
+        .bottom-hint {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-blur"></div>
+    
+    <div class="particles" id="particles"></div>
+    
+    <!-- 特大再见卡片 -->
+    <div class="goodbye-overlay" id="goodbyeOverlay">
+        <div class="goodbye-card">再见</div>
+    </div>
+    
+    <!-- 第一屏 -->
+    <div class="first-screen">
+        <div class="container">
+            <h1 class="main-title">北玄宗师</h1>
+            
+            <div class="cards">
+                <div class="card" id="aboutCard">
+                    <span>关于我</span>
+                    <div class="contact-info">
+                        微信：hxs20120503<br>
+                        QQ：2142388268
+                    </div>
+                </div>
+                <div class="card" onclick="window.open('https://space.bilibili.com/3546766624426592', '_blank')">
+                    <span>我的主页</span>
+                </div>
+                <div class="card">
+                    <span>(*^▽^*)</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="scroll-hint">↓ 向下滚动到底部 ↓</div>
+    </div>
+
+    <!-- 第二屏（底部区域） -->
+    <div class="bottom-area">
+        <div class="bottom-hint">↑ 向上滚动返回顶部 ↑</div>
+    </div>
+
+    <script>
+        // 创建浮动粒子
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 15 + 's';
+            particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // 关于我卡片
+        const aboutCard = document.getElementById('aboutCard');
+        aboutCard.addEventListener('click', function(e) {
+            e.stopPropagation();
+            this.classList.toggle('expanded');
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!aboutCard.contains(e.target)) {
+                aboutCard.classList.remove('expanded');
+            }
+        });
+
+        // 滚动检测和再见卡片控制
+        const goodbyeOverlay = document.getElementById('goodbyeOverlay');
+        let isAtBottom = false;
+        let lastScrollY = window.scrollY;
+        let isGoodbyeVisible = false;
+        let wheelTimeout = null;
+
+        // 检测是否在底部
+        function checkIfAtBottom() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight;
+            const clientHeight = document.documentElement.clientHeight;
+            
+            return scrollTop + clientHeight >= scrollHeight - 10; // 距离底部10px内算作底部
+        }
+
+        // 检测是否在顶部
+        function checkIfAtTop() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            return scrollTop <= 10; // 距离顶部10px内算作顶部
+        }
+
+        // 滚轮事件监听 - 修复到底部后向下滚动显示再见卡片
+        window.addEventListener('wheel', function(e) {
+            const atBottomNow = checkIfAtBottom();
+            const atTopNow = checkIfAtTop();
+            
+            // 清除之前的超时
+            clearTimeout(wheelTimeout);
+            
+            // 如果在底部且向下滚动，显示再见卡片
+            if (atBottomNow && e.deltaY > 0) {
+                if (!isGoodbyeVisible) {
+                    goodbyeOverlay.classList.remove('hiding');
+                    goodbyeOverlay.classList.add('active');
+                    isGoodbyeVisible = true;
+                }
+            }
+            // 如果在顶部且向上滚动，隐藏再见卡片
+            else if (atTopNow && e.deltaY < 0 && isGoodbyeVisible) {
+                goodbyeOverlay.classList.add('hiding');
+                goodbyeOverlay.classList.remove('active');
+                isGoodbyeVisible = false;
+            }
+            // 其他情况，延迟隐藏再见卡片
+            else {
+                wheelTimeout = setTimeout(() => {
+                    if (isGoodbyeVisible) {
+                        goodbyeOverlay.classList.add('hiding');
+                        goodbyeOverlay.classList.remove('active');
+                        isGoodbyeVisible = false;
+                    }
+                }, 500);
+            }
+            
+            lastScrollY = window.scrollY;
+        }, { passive: true });
+
+        // 触摸设备支持
+        let touchStartY = 0;
+        window.addEventListener('touchstart', function(e) {
+            touchStartY = e.touches[0].clientY;
+        });
+
+        window.addEventListener('touchend', function(e) {
+            const touchEndY = e.changedTouches[0].clientY;
+            const atBottomNow = checkIfAtBottom();
+            const atTopNow = checkIfAtTop();
+            
+            // 向下滑动（手指向上）且在底部
+            if (atBottomNow && touchStartY - touchEndY > 50) {
+                if (!isGoodbyeVisible) {
+                    goodbyeOverlay.classList.remove('hiding');
+                    goodbyeOverlay.classList.add('active');
+                    isGoodbyeVisible = true;
+                }
+            }
+            // 向上滑动（手指向下）且在顶部
+            else if (atTopNow && touchEndY - touchStartY > 50 && isGoodbyeVisible) {
+                goodbyeOverlay.classList.add('hiding');
+                goodbyeOverlay.classList.remove('active');
+                isGoodbyeVisible = false;
+            }
+        });
+
+        // 初始化检测
+        isAtBottom = checkIfAtBottom();
+        lastScrollY = window.scrollY;
+    </script>
+</body>
+</html>
